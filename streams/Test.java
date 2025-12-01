@@ -1,4 +1,4 @@
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public class Test {
 
@@ -26,6 +26,11 @@ public class Test {
 
         // Consumer<Integer> con = x -> System.out.println(x-1);
         // con.accept(10);
+
+        // Bi Counterparts of these
+
+        // BiConsumer<Integer, Integer> con = (x,y) -> System.out.println(x-y);
+        // con.accept(10,7);
     }
 
 }
