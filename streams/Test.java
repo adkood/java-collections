@@ -1,4 +1,16 @@
-import java.util.function.BiConsumer;
+import java.util.List;
+
+class Car {
+    String name;
+    Car(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "[Car: "+name+" ]";
+    }
+}
 
 public class Test {
 
@@ -31,6 +43,17 @@ public class Test {
 
         // BiConsumer<Integer, Integer> con = (x,y) -> System.out.println(x-y);
         // con.accept(10,7);
-    }
+
+
+        // method reference
+        List<String> list = List.of("ashu", "rohan", "pp");
+        System.out.println( list.stream().map(String::toUpperCase).toList());
+
+        // constructor reference
+
+        List<String> names = List.of("i10", "alto", "swift");        
+        List<Car> cars = names.stream().map(Car::new).toList();
+        System.out.println(cars);
+    }   
 
 }
