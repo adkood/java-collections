@@ -1,3 +1,4 @@
+import java.util.function.Supplier;
 import java.util.function.Predicate;
 
 public class Test {
@@ -9,6 +10,20 @@ public class Test {
         // Predicate<Integer> isEven = x -> x%2 == 0;
         // Predicate<Integer> isDivBy10 = x -> x%10 == 0;  
         // System.out.println(isEven.and(isDivBy10).test(100));
+
+        // function
+
+        // Function<Integer, Integer> f = x -> x * 2;
+        // Function<Integer, Integer> s = x -> x + 5;
+
+        // System.out.println(f.andThen(s).apply(10)); // 25
+        // System.out.println(f.compose(s).apply(10)); // 30
+
+        // Supplier 
+
+        Supplier<String> sup = () -> "hello";
+        System.out.println(sup.get());
+
         
     }
 
