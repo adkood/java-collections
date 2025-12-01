@@ -1,10 +1,8 @@
-import java.util.function.Supplier;
-import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 public class Test {
 
     public static void main(String[] args) {
-        
         // predicate 
 
         // Predicate<Integer> isEven = x -> x%2 == 0;
@@ -21,10 +19,13 @@ public class Test {
 
         // Supplier 
 
-        Supplier<String> sup = () -> "hello";
-        System.out.println(sup.get());
+        // Supplier<String> sup = () -> "hello";
+        // System.out.println(sup.get());
 
-        
+        // Consumer
+
+        // Consumer<Integer> con = x -> System.out.println(x-1);
+        // con.accept(10);
     }
 
 }
