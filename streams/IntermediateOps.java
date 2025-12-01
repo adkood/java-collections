@@ -1,11 +1,13 @@
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class IntermediateOps {
 
     public static void main(String[] args) {
-        
+
         // Ways to create streams
 
         // 1.
@@ -29,6 +31,9 @@ public class IntermediateOps {
         
         // using iterate
         // System.out.println(Stream.iterate(1, x -> x+1).limit(100).toList());
+
+
+
     }
     
 }
