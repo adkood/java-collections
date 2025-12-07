@@ -1,8 +1,10 @@
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 class Car {
     String name;
@@ -20,17 +22,10 @@ public class Test {
 
     public static void main(String[] args) {
 
-        BiPredicate<Integer, Integer> biP = (a,b) -> { 
-            try {
-                return a%b == 0;
-            } catch(Exception e) {
-                System.out.println("Cannot divide by zero");
-            }
-            return false;
-        };
+        Stream<Integer> it = Stream.iterate(1, x -> x+1);
 
-        System.out.println(biP.test(10, 0));
+        System.out.println(it.map(x -> x * 10).limit(10).toList());
 
-    }   
+    }
 
 }
