@@ -1,5 +1,7 @@
 package queue;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -7,17 +9,14 @@ public class MyQueue {
  
     public static void main(String[] args) {
         
-        Queue<Integer> q = new LinkedList<>();
+        Deque<Integer> q = new ArrayDeque<>();
 
-        q.offer(120);
-        q.add(203);
+        q.add(13);
+        q.addLast(79);
 
-        q.poll();
-        q.poll();
+        q.add(100);
 
-        q.remove();
-
-        // System.out.println(q.peek());
+        System.out.println(q);
     }
     
 }
