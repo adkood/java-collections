@@ -21,71 +21,25 @@ class Student {
     }
 }
 
-class Counter {
-    private List<Integer> count = new CopyOnWriteArrayList<>();
-
-    public void addElement(int i) {
-        count.add(i);
-    }
-
-    public int getSize() {
-        return count.size();
-    }
-}
-
-class task1 implements Runnable {
-
-    Counter counter;
-
-    public task1(Counter counter) {
-        this.counter = counter;
-    }
-
-    @Override
-    public void run() {
-        for(int i = 0; i < 1000; i++) {
-            counter.addElement(i);
-        }
-    }
-}
-
-class task2 implements Runnable {
-
-    Counter counter;
-
-    public task2(Counter counter) {
-        this.counter = counter;
-    }
-
-    @Override
-    public void run() {
-        for(int i = 0; i < 1000; i++) {
-            counter.addElement(i);
-        }
-    }
-}
-
-
 public class MyList {
     
     public static void main(String[] args) {
-        
-        Counter counter = new Counter();
 
-        Thread t1 = new Thread(new task1(counter));
-        Thread t2 = new Thread(new task2(counter));
+        List<Integer> list = new CopyOnWriteArrayList<>();
 
-        t1.start();
-        t2.start();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
 
-        try {
-            t1.join();
-            t2.join();
-        } catch (Exception e) {
-            e.printStackTrace();   
+        for(Integer i : list) {
+            if(i%2 == 0) {
+                list.remove(i);
+            }
         }
-        
-        System.out.println(counter.getSize());
+
+        System.out.println(list);
     }
 
 }
