@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 import java.util.Vector;
 
 class Student {
@@ -20,10 +21,10 @@ class Student {
 }
 
 class Counter {
-    private List<Integer> count = new Vector<>();
+    private Stack<Integer> count = new Stack<>();
 
     public void addElement(int i) {
-        count.add(i);
+        count.push(i);
     }
 
     public int getSize() {
