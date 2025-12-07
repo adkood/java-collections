@@ -1,5 +1,7 @@
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 class Car {
     String name;
@@ -17,24 +19,13 @@ public class Test {
 
     public static void main(String[] args) {
 
-        // predicate
+        Supplier<Integer> supplier = () -> 42;
 
-        Predicate<Integer> predicate = x -> x%2 == 0;
+        System.out.println(supplier.get());
 
-        Predicate<Integer> predicate2 = x -> x%4 == 0;
+        Consumer<Integer> consumer = (x) -> System.out.println("x is : " + x);
 
-        System.out.println(predicate.negate().test(1));
-
-        // function
-
-        Function<Integer, Integer> function = (x) -> x += 2;
-
-        Function<Integer, Integer> function2 = (x) -> x /= 2;
-
-
-
-        System.out.println( Function.identity().apply(100));
-
+        consumer.accept(101);
     }   
 
 }
