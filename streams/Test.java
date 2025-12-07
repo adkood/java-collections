@@ -1,5 +1,10 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -22,9 +27,15 @@ public class Test {
 
     public static void main(String[] args) {
 
-        Stream<Integer> it = Stream.iterate(1, x -> x+1);
+        List<Integer> mp = new ArrayList<>();
+        mp.add(1);
+        mp.add(2);
+        mp.add(6);
+        mp.add(7);
+        mp.add(10);
 
-        System.out.println(it.map(x -> x * 10).limit(10).toList());
+        System.out.println(mp.stream().filter(x -> x%2 == 0).findAny().get());
+
 
     }
 
