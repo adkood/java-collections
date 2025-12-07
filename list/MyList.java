@@ -35,9 +35,12 @@ public class MyList {
 
         for(Integer i : list) {
             if(i%2 == 0) {
-                list.remove(i);
+                list.add(15);
             }
+            System.out.print(i + " ");
         }
+
+        System.out.println("******************");
 
         System.out.println(list);
     }
