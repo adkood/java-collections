@@ -1,3 +1,4 @@
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -19,13 +20,17 @@ public class Test {
 
     public static void main(String[] args) {
 
-        Supplier<Integer> supplier = () -> 42;
+        BiPredicate<Integer, Integer> biP = (a,b) -> { 
+            try {
+                return a%b == 0;
+            } catch(Exception e) {
+                System.out.println("Cannot divide by zero");
+            }
+            return false;
+        };
 
-        System.out.println(supplier.get());
+        System.out.println(biP.test(10, 0));
 
-        Consumer<Integer> consumer = (x) -> System.out.println("x is : " + x);
-
-        consumer.accept(101);
     }   
 
 }
