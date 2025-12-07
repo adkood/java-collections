@@ -1,4 +1,5 @@
-import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 class Car {
     String name;
@@ -15,45 +16,25 @@ class Car {
 public class Test {
 
     public static void main(String[] args) {
-        // predicate 
 
-        // Predicate<Integer> isEven = x -> x%2 == 0;
-        // Predicate<Integer> isDivBy10 = x -> x%10 == 0;  
-        // System.out.println(isEven.and(isDivBy10).test(100));
+        // predicate
+
+        Predicate<Integer> predicate = x -> x%2 == 0;
+
+        Predicate<Integer> predicate2 = x -> x%4 == 0;
+
+        System.out.println(predicate.negate().test(1));
 
         // function
 
-        // Function<Integer, Integer> f = x -> x * 2;
-        // Function<Integer, Integer> s = x -> x + 5;
+        Function<Integer, Integer> function = (x) -> x += 2;
 
-        // System.out.println(f.andThen(s).apply(10)); // 25
-        // System.out.println(f.compose(s).apply(10)); // 30
-
-        // Supplier 
-
-        // Supplier<String> sup = () -> "hello";
-        // System.out.println(sup.get());
-
-        // Consumer
-
-        // Consumer<Integer> con = x -> System.out.println(x-1);
-        // con.accept(10);
-
-        // Bi Counterparts of these
-
-        // BiConsumer<Integer, Integer> con = (x,y) -> System.out.println(x-y);
-        // con.accept(10,7);
+        Function<Integer, Integer> function2 = (x) -> x /= 2;
 
 
-        // method reference
-        List<String> list = List.of("ashu", "rohan", "pp");
-        System.out.println( list.stream().map(String::toUpperCase).toList());
 
-        // constructor reference
+        System.out.println( Function.identity().apply(100));
 
-        List<String> names = List.of("i10", "alto", "swift");        
-        List<Car> cars = names.stream().map(Car::new).toList();
-        System.out.println(cars);
     }   
 
 }
