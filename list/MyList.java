@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 class Student {
     String name;
@@ -21,10 +22,10 @@ class Student {
 }
 
 class Counter {
-    private Stack<Integer> count = new Stack<>();
+    private List<Integer> count = new CopyOnWriteArrayList<>();
 
     public void addElement(int i) {
-        count.push(i);
+        count.add(i);
     }
 
     public int getSize() {
