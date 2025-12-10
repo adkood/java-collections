@@ -3,6 +3,7 @@ package threads;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,60 +18,63 @@ class MyRunnable implements Runnable {
 
 class MyCallable1 implements Callable<String> {
 
-    private CountDownLatch latch;
+    private CyclicBarrier barrier;
 
-    MyCallable1(CountDownLatch latch) {
-        this.latch = latch;
+    MyCallable1(CyclicBarrier barrier) {
+        this.barrier = barrier;
     }
 
     @Override
     public String call() throws Exception {
-        try {
-            Thread.sleep(1000);
-            return "hello from callable 1"; 
+        // try {
+        Thread.sleep(1000);
+        barrier.await();
+        return "hello from callable 1";
 
-        } finally {
-            latch.countDown();
-        }
+        // } finally {
+
+        // }
     }
 }
 
 class MyCallable2 implements Callable<String> {
 
-    private CountDownLatch latch;
+    private CyclicBarrier barrier;
 
-    MyCallable2(CountDownLatch latch) {
-        this.latch = latch;
+    MyCallable2(CyclicBarrier barrier) {
+        this.barrier = barrier;
     }
 
     @Override
     public String call() throws Exception {
         try {
-                        Thread.sleep(2000);
-            return "hello from callable 2"; 
+            Thread.sleep(2000);
+            barrier.await();
+            return "hello from callable 2";
         } finally {
-            latch.countDown();
-        }    
+            // latch.countDown();
+        }
     }
 }
 
 class MyCallable3 implements Callable<String> {
 
-    private CountDownLatch latch;
+    private CyclicBarrier barrier;
 
-    MyCallable3(CountDownLatch latch) {
-        this.latch = latch;
+    MyCallable3(CyclicBarrier barrier) {
+        this.barrier = barrier;
     }
 
     @Override
     public String call() throws Exception {
         try {
-                        Thread.sleep(3000);
+            Thread.sleep(3000);
+            barrier.await();
 
-            return "hello from callable 3"; 
+            return "hello from callable 3";
         } finally {
-            latch.countDown();
-        }    
+            // latch.countDown();
+        }
     }
 }
 
@@ -79,17 +83,17 @@ public class Concurrency {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
 
         ExecutorService eService = Executors.newFixedThreadPool(3);
-        int countDown = 3;
-        CountDownLatch latch = new CountDownLatch(3);
 
-        eService.submit(new MyCallable1(latch));
-        eService.submit(new MyCallable2(latch));
-        eService.submit(new MyCallable3(latch));
+        int parties = 3;
+        CyclicBarrier barrier = new CyclicBarrier(parties,
+                () -> {
+                    System.out.println("All parties arrived at the barrier. Now start!");
+                    eService.shutdown();
+                });
 
-        latch.await(4000, TimeUnit.MILLISECONDS);
-
-        System.out.println("Dependencies are up. Main started");
-        eService.shutdown();
+        eService.submit(new MyCallable1(barrier));
+        eService.submit(new MyCallable2(barrier));
+        eService.submit(new MyCallable3(barrier));
 
     }
 
