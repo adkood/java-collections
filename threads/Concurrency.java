@@ -1,5 +1,6 @@
 package threads;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -8,7 +9,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-
 class MyRunnable implements Runnable {
     @Override
     public void run() {
@@ -16,11 +16,24 @@ class MyRunnable implements Runnable {
     }
 }
 
-class MyCallable implements Callable<String>{
+class MyCallable1 implements Callable<String> {
     @Override
     public String call() throws Exception {
-        System.out.println("Inside callable, returns something, throws exception");
-        return "hello from callable";
+        return "hello from callable 1";
+    }
+}
+
+class MyCallable2 implements Callable<String> {
+    @Override
+    public String call() throws Exception {
+        return "hello from callable 2";
+    }
+}
+
+class MyCallable3 implements Callable<String> {
+    @Override
+    public String call() throws Exception {
+        return "hello from callable 3";
     }
 }
 
@@ -61,37 +74,25 @@ public class Concurrency {
 
         // -- Using Executors service
 
-        ExecutorService eService =  Executors.newFixedThreadPool(3);
+        ExecutorService eService = Executors.newFixedThreadPool(3);
 
-        Future<?> future = eService.submit(() -> {
-            try {
-                for(int i = 0; i < 10; i++) {
-                    Thread.sleep(1000);
-                    int finalI = i;
-                    System.out.println("Thread is running : " + finalI);
-                }
-            } catch (InterruptedException e) {
-                System.out.println("Thread was inturrupted!");
-            }
-        });
+        String val = eService
+                .invokeAny(List.of(new MyCallable1(), new MyCallable2(), new MyCallable3()));
 
-        try {
-            Thread.sleep(2000);
-        }catch(Exception e) {
+        // System.out.println(future.stream().map(n -> {
+        //     try {
+        //         return n.get();
+        //     } catch (InterruptedException e) {
+        //         e.printStackTrace();
+        //     } catch (ExecutionException e) {
+        //         e.printStackTrace();
+        //     }
+        //     return null;
+        // }).toList());
 
-        }
+        System.out.println(val);
 
-        // future.cancel(true);
-
-        
-        future.get();
-        
         eService.shutdown();
-        
-        System.out.println(future.isCancelled());
-        System.out.println(future.isDone());
-
-
     }
 
 }
