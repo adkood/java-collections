@@ -7,6 +7,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 class MyRunnable implements Runnable {
@@ -41,58 +43,28 @@ public class Concurrency {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
 
-        // -- Normal way
-        // Thread[] threads = new Thread[10];
+        
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(10);
 
-        // for (int i = 0; i < 10; i++) {
-        // int finalI = i;
-        // threads[finalI] = new Thread(() -> {
-        // System.out.println(Thread.currentThread().getName() + " : " + finalI);
-        // });
-        // }
+        // service.schedule(() -> {
+        //     System.out.println("Hello from scheduler");
+        // }, 3000, TimeUnit.MILLISECONDS);
 
-        // for (int i = 0; i < 10; i++) {
-        // threads[i].start();
-        // }
 
-        // try {
-        // for (int i = 0; i < 10; i++) {
-        // threads[i].join();
-        // }
-        // } catch (InterruptedException e) {
-        // Thread.currentThread().interrupt();
-        // }
+        ScheduledFuture<?> future = service.scheduleWithFixedDelay(() -> {
+            try {
+                Thread.sleep(1000);
+                System.out.println("yello form melo");
+            } catch (InterruptedException e) {
+                System.out.println("Task Inturrupted!");
+            }
+        }, 1000, 1000, TimeUnit.MILLISECONDS);
 
-        // -- Using Executor
-        // Executor service = Executors.newFixedThreadPool(10);
+        service.schedule(() -> {
+            future.cancel(false);
+            service.shutdown();
+        }, 5000, TimeUnit.MILLISECONDS);
 
-        // for (int i = 0; i < 10; i++) {
-        // int finalI = i;
-        // service.execute(() -> System.out.println(Thread.currentThread().getName() + "
-        // : " + finalI));
-        // }
-
-        // -- Using Executors service
-
-        ExecutorService eService = Executors.newFixedThreadPool(3);
-
-        String val = eService
-                .invokeAny(List.of(new MyCallable1(), new MyCallable2(), new MyCallable3()));
-
-        // System.out.println(future.stream().map(n -> {
-        //     try {
-        //         return n.get();
-        //     } catch (InterruptedException e) {
-        //         e.printStackTrace();
-        //     } catch (ExecutionException e) {
-        //         e.printStackTrace();
-        //     }
-        //     return null;
-        // }).toList());
-
-        System.out.println(val);
-
-        eService.shutdown();
     }
 
 }
