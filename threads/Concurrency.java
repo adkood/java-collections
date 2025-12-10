@@ -1,61 +1,67 @@
 package threads;
 
-class MyDeamon extends Thread {
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+
+class MyRunnable implements Runnable {
     @Override
     public void run() {
-
-        for (int i = 0; i < 10; i++) {
-            try {
-                Thread.currentThread().sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            System.out.println("Deamon : " + i);
-        }
-
+        System.out.println("Inside runnable, no return, does not throw exception");
     }
+}
 
+class MyCallable implements Callable<String>{
+    @Override
+    public String call() throws Exception {
+        System.out.println("Inside callable, returns something, throws exception");
+        return "hello from callable";
+    }
 }
 
 public class Concurrency {
 
     public static void main(String[] args) {
 
-        Thread th = new Thread(() -> {
+        // -- Normal way
+        // Thread[] threads = new Thread[10];
 
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            System.out.println("thread 1");
-        });
+        // for (int i = 0; i < 10; i++) {
+        // int finalI = i;
+        // threads[finalI] = new Thread(() -> {
+        // System.out.println(Thread.currentThread().getName() + " : " + finalI);
+        // });
+        // }
 
-        Thread th2 = new Thread(() -> {
+        // for (int i = 0; i < 10; i++) {
+        // threads[i].start();
+        // }
 
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            System.out.println("thread 2");
-        });
+        // try {
+        // for (int i = 0; i < 10; i++) {
+        // threads[i].join();
+        // }
+        // } catch (InterruptedException e) {
+        // Thread.currentThread().interrupt();
+        // }
 
-        Thread th3 = new MyDeamon();
-        th3.setDaemon(true);
+        // -- Using Executor
+        // Executor service = Executors.newFixedThreadPool(10);
 
-        th.start();
-        th2.start();
-        th3.start();
+        // for (int i = 0; i < 10; i++) {
+        // int finalI = i;
+        // service.execute(() -> System.out.println(Thread.currentThread().getName() + "
+        // : " + finalI));
+        // }
 
-        try {
-            th.join();
-            th2.join();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        // -- Using Executors service
 
+        ExecutorService
     }
 
 }
