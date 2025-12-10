@@ -1,26 +1,32 @@
 package generics;
 
-class MyException extends Exception {
-    MyException(String message) {
-        super(message);
-    }
-}
+import java.util.ArrayList;
+import java.util.List;
 
 public class Generics {
 
-    public static <T extends Exception> void testException(T ex) throws T {
-        throw ex;
-    } 
+    public static <T extends Number> double addValue(List<T> list) {
+        double sum = 0;
+        for(T x: list) {
+            sum += x.doubleValue();
+        }
+        return sum;
+    }
+
+    public static void pushValue(List<? super Integer> list, Integer value) {
+        list.add(value);
+    }
 
     public static void main(String[] args) {
 
-        try {
-            testException(new MyException("Hello from custom excep"));
-        } catch (MyException e) {
-            System.out.println("custom : " + e);
-        } catch(Exception e) {
-            System.out.println(e);
-        }
+        List<Number> list = new ArrayList<>();
+        list.add(1);
+        list.add(5.5);
+        list.add(10);
+
+        pushValue(list, 20);
+        System.out.println(addValue(list));
+
 
     }
 }
