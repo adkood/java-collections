@@ -2,13 +2,10 @@ package threads;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 class MyRunnable implements Runnable {
@@ -19,23 +16,61 @@ class MyRunnable implements Runnable {
 }
 
 class MyCallable1 implements Callable<String> {
+
+    private CountDownLatch latch;
+
+    MyCallable1(CountDownLatch latch) {
+        this.latch = latch;
+    }
+
     @Override
     public String call() throws Exception {
-        return "hello from callable 1";
+        try {
+            Thread.sleep(1000);
+            return "hello from callable 1"; 
+
+        } finally {
+            latch.countDown();
+        }
     }
 }
 
 class MyCallable2 implements Callable<String> {
+
+    private CountDownLatch latch;
+
+    MyCallable2(CountDownLatch latch) {
+        this.latch = latch;
+    }
+
     @Override
     public String call() throws Exception {
-        return "hello from callable 2";
+        try {
+                        Thread.sleep(2000);
+            return "hello from callable 2"; 
+        } finally {
+            latch.countDown();
+        }    
     }
 }
 
 class MyCallable3 implements Callable<String> {
+
+    private CountDownLatch latch;
+
+    MyCallable3(CountDownLatch latch) {
+        this.latch = latch;
+    }
+
     @Override
     public String call() throws Exception {
-        return "hello from callable 3";
+        try {
+                        Thread.sleep(3000);
+
+            return "hello from callable 3"; 
+        } finally {
+            latch.countDown();
+        }    
     }
 }
 
@@ -43,27 +78,18 @@ public class Concurrency {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
 
-        
-        ScheduledExecutorService service = Executors.newScheduledThreadPool(10);
+        ExecutorService eService = Executors.newFixedThreadPool(3);
+        int countDown = 3;
+        CountDownLatch latch = new CountDownLatch(3);
 
-        // service.schedule(() -> {
-        //     System.out.println("Hello from scheduler");
-        // }, 3000, TimeUnit.MILLISECONDS);
+        eService.submit(new MyCallable1(latch));
+        eService.submit(new MyCallable2(latch));
+        eService.submit(new MyCallable3(latch));
 
+        latch.await(4000, TimeUnit.MILLISECONDS);
 
-        ScheduledFuture<?> future = service.scheduleWithFixedDelay(() -> {
-            try {
-                Thread.sleep(1000);
-                System.out.println("yello form melo");
-            } catch (InterruptedException e) {
-                System.out.println("Task Inturrupted!");
-            }
-        }, 1000, 1000, TimeUnit.MILLISECONDS);
-
-        service.schedule(() -> {
-            future.cancel(false);
-            service.shutdown();
-        }, 5000, TimeUnit.MILLISECONDS);
+        System.out.println("Dependencies are up. Main started");
+        eService.shutdown();
 
     }
 
