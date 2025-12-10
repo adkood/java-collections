@@ -26,7 +26,7 @@ class MyCallable implements Callable<String>{
 
 public class Concurrency {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
 
         // -- Normal way
         // Thread[] threads = new Thread[10];
@@ -61,7 +61,37 @@ public class Concurrency {
 
         // -- Using Executors service
 
-        ExecutorService
+        ExecutorService eService =  Executors.newFixedThreadPool(3);
+
+        Future<?> future = eService.submit(() -> {
+            try {
+                for(int i = 0; i < 10; i++) {
+                    Thread.sleep(1000);
+                    int finalI = i;
+                    System.out.println("Thread is running : " + finalI);
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Thread was inturrupted!");
+            }
+        });
+
+        try {
+            Thread.sleep(2000);
+        }catch(Exception e) {
+
+        }
+
+        // future.cancel(true);
+
+        
+        future.get();
+        
+        eService.shutdown();
+        
+        System.out.println(future.isCancelled());
+        System.out.println(future.isDone());
+
+
     }
 
 }
