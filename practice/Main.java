@@ -1,29 +1,25 @@
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
+    public static void main(String[] args) throws InterruptedException {
 
-    public static CompletableFuture<String> getUserByUserId(String userId) {
-        System.out.println("Fetching user for userId : " + userId);
-        if(userId.equals("101")) throw new RuntimeException("Something went wrong");
-        return CompletableFuture.completedFuture("ashutosh");
-    }
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(2);
 
-        CompletableFuture<String> userId = CompletableFuture.supplyAsync(() -> {
-            System.out.println("UserId fetched for user");
-            return "101";
-        });
-        
-        CompletableFuture<String> user = userId.thenCompose(n -> getUserByUserId(n)).handle((res, err) -> {
-            if(res == null) {
-                System.out.println("Something went wrong");
-                return "Default user"; 
+        service.scheduleWithFixedDelay(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            return res;
-        });
+            System.out.println("wazzzzzzzzap");
+        }, 3000, 1000,TimeUnit.MILLISECONDS);
 
-        System.out.println(user.get());
+        service.schedule(() -> {
+            service.shutdown();
+        }, 8000, TimeUnit.MILLISECONDS);
+
     }
 
 }
