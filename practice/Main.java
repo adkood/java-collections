@@ -1,22 +1,14 @@
-
-class Test {
-
-    public synchronized void funcA() {
-        System.out.println("func a");
-    };
-
-    public synchronized void funcB() {
-       System.out.println("func b");
-       funcA(); 
-    };
-}
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
-        Test test = new Test();
-        test.funcB();
+
+        ExecutorService service = Executors.newFixedThreadPool(2);
+
+        // service.
+
     }
 
 }
