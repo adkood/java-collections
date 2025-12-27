@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -63,10 +64,16 @@ class Node<K> {
         this.next = null;
         this.prev = null;
     }
+
+    @Override
+    public String toString() {
+        return "[ " + this.data + " l : " + prev.data + " r : " + next.data + " ]";
+    }
 }
 
 class LruCache<K, V> implements Cache<K, V> {
 
+    private Map<K, Node<K>> mp;
     private Node<K> head;
     private Node<K> tail;
     private Storage<K, V> storage;
@@ -74,6 +81,7 @@ class LruCache<K, V> implements Cache<K, V> {
     private int size;
 
     LruCache(int cap) {
+        mp = new HashMap<>();
         storage = new InMemoryStorage<>();
         head = new Node<>();
         tail = new Node<>();
@@ -87,22 +95,19 @@ class LruCache<K, V> implements Cache<K, V> {
     @Override
     public synchronized void set(K key, V value) {
 
-        if (storage.contains(key)) {
+        if (mp.containsKey(key)) {
 
             storage.set(key, value);
 
-            Node<K> nn = head;
-
-            while (nn != tail && nn.data != key) {
-                nn = nn.next;
-            }
+            Node<K> nn = mp.get(key);
 
             if (nn.prev != null)
                 nn.prev.next = nn.next;
             if (nn.next != null)
                 nn.next.prev = nn.prev;
 
-            tail.prev.next = nn;
+            if (tail.prev != null)
+                tail.prev.next = nn;
             nn.prev = tail.prev;
             nn.next = tail;
             tail.prev = nn;
@@ -110,51 +115,53 @@ class LruCache<K, V> implements Cache<K, V> {
         } else {
 
             if (size == cap) {
-
                 storage.remove(head.data);
 
                 Node<K> newhead = head.next;
                 head.next = null;
                 newhead.prev = null;
+                System.out.println(head.data);
                 head = newhead;
 
-            } else {
-
-                storage.set(key, value);
-
-                Node<K> nn = new Node<>(key);
-
-                if (head.data == null) {
-                    head = nn;
-                    nn.next = tail;
-                    tail.prev = nn;
-                } else {
-                    tail.prev.next = nn;
-                    nn.prev = tail.prev;
-                    nn.next = tail;
-                    tail.prev = nn;
-                }
-                size++;
+                size--;
             }
 
+            storage.set(key, value);
+
+            Node<K> nn = new Node<>(key);
+
+            if (head.data == null) {
+                head = nn;
+                nn.next = tail;
+                tail.prev = nn;
+            } else {
+                if (tail.prev != null)
+                    tail.prev.next = nn;
+                nn.prev = tail.prev;
+                nn.next = tail;
+                tail.prev = nn;
+            }
+
+            size++;
         }
     }
 
     @Override
     public synchronized V get(K key) {
 
-        Node<K> nn = head;
-
-        while (nn != tail && nn.data != key) {
-            nn = nn.next;
+        if(!mp.containsKey(key)) {
+            return null;
         }
+
+        Node<K> nn = mp.get(key);
 
         if (nn.prev != null)
             nn.prev.next = nn.next;
         if (nn.next != null)
             nn.next.prev = nn.prev;
 
-        tail.prev.next = nn;
+        if (tail.prev != null)
+            tail.prev.next = nn;
         nn.prev = tail.prev;
         nn.next = tail;
         tail.prev = nn;
@@ -178,7 +185,7 @@ public class Main {
         // cache.get("one");
         cache.set("six", 6);
 
-        System.out.println(cache.get("six"));
+        System.out.println(cache.get("one"));
 
     }
 
